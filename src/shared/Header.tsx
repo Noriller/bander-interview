@@ -31,7 +31,6 @@ export function Header() {
           <StackDivider borderColor='gray.200' />
         }
         alignSelf={['unset', 'normal']}
-        sx={{ '& a:hover': { color: 'red' } }}
         py='2'>
         <CustomLink
           href='https://www.linkedin.com/in/noriller/'
