@@ -5,11 +5,18 @@ import {
   HStack,
 } from '@chakra-ui/layout';
 import { Img } from '@chakra-ui/react';
-import React from 'react';
+import React, {
+  useEffect,
+  useState,
+} from 'react';
 import { CustomLink } from './CustomLink';
 
 export function Footer() {
-  const url = window.location.href;
+  const [url, setUrl] = useState('');
+
+  useEffect(() => {
+    setUrl(window.location.href);
+  }, []);
   const sharingText =
     'Bandersnatch Interview with Bruno Noriller';
 
