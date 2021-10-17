@@ -12,9 +12,7 @@ const Home: NextPage = () => (
 
     <Header />
 
-    <Box as='main' flex='1 0 auto'>
-      <VideoContainer />
-    </Box>
+    <VideoContainer />
 
     <Footer />
   </Flex>
