@@ -2,6 +2,7 @@ import {
   Box,
   Center,
   Flex,
+  Heading,
   HStack,
 } from '@chakra-ui/layout';
 import { Img } from '@chakra-ui/react';
@@ -34,7 +35,9 @@ export function Footer() {
       </Box>
       <Box />
       <Center flexDirection='column'>
-        <Box>Not hiring? Share on</Box>
+        <Heading as='h6' fontSize='medium'>
+          Not hiring? Share on
+        </Heading>
         <HStack marginBottom='2' spacing='6'>
           <CustomLink
             href={`https://www.linkedin.com/cws/share?url=${url}`}>

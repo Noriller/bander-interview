@@ -25,26 +25,30 @@ export function Header() {
         Bruno Noriller
       </Heading>
 
-      <HStack
-        spacing='4'
-        divider={
-          <StackDivider borderColor='gray.200' />
-        }
-        alignSelf={['unset', 'normal']}
-        py='2'>
-        <CustomLink
-          href='https://www.linkedin.com/in/noriller/'
-          label='Linkedin'
-        />
-        <CustomLink
-          href='https://github.com/Noriller'
-          label='Github'
-        />
-        <CustomLink
-          href='https://www.linkedin.com/in/noriller/'
-          label='Dev.to'
-        />
-      </HStack>
+      <Center flexDirection='column'>
+        <Heading as='h6' fontSize='medium' pb='1'>
+          My Links:
+        </Heading>
+        <HStack
+          spacing='4'
+          divider={
+            <StackDivider borderColor='gray.200' />
+          }
+          alignSelf={['unset', 'normal']}>
+          <CustomLink
+            href='https://www.linkedin.com/in/noriller/'
+            label='Linkedin'
+          />
+          <CustomLink
+            href='https://github.com/Noriller'
+            label='Github'
+          />
+          <CustomLink
+            href='https://www.linkedin.com/in/noriller/'
+            label='Dev.to'
+          />
+        </HStack>
+      </Center>
     </Center>
   );
 }
