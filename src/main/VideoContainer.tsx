@@ -1,10 +1,5 @@
-import { Image } from '@chakra-ui/image';
-import {
-  AspectRatio,
-  Box,
-  Center,
-  Flex,
-} from '@chakra-ui/layout';
+import { Center } from '@chakra-ui/layout';
+import { VideoPlayer } from './VideoPlayer';
 
 export function VideoContainer() {
   return (
@@ -20,7 +15,7 @@ export function VideoContainer() {
           '80%',
           '70%',
         ]}>
-        <video src='http://127.0.0.1:8081/timeline/02.guitarra-1920x1080.mp4' />
+        <VideoPlayer />
       </Center>
     </Center>
   );
