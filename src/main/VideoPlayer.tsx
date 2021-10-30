@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import { Box, Flex } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/button';
+import { Progress } from '@chakra-ui/react';
 declare const window: any;
 
 export function VideoPlayer() {
@@ -16,6 +17,11 @@ export function VideoPlayer() {
     'http://127.0.0.1:8081/timeline/vid02.mp4',
     'http://127.0.0.1:8081/timeline/vid03.mp4',
     'http://127.0.0.1:8081/timeline/vid04.mp4',
+  ];
+  const options = [
+    '1. option 1 lorem ipsum',
+    '2. option 2 lorem ipsum',
+    '3. option 3 lorem ipsum',
   ];
 
   const ref0 = useRef<HTMLVideoElement>(null);
@@ -27,11 +33,21 @@ export function VideoPlayer() {
   const [isFullscreen, setFullscreen] =
     useState(false);
 
+  const [selected, setSelected] = useState(0);
+
   const keydownEvents = (
     event: React.KeyboardEvent,
   ): void => {
     if (event.key === 'f') toggleFullscreen();
     if (event.key === ' ') togglePlay();
+    if (event.key === 'ArrowUp')
+      setSelected(cur =>
+        offsetIndex(options.length, cur, -1),
+      );
+    if (event.key === 'ArrowDown')
+      setSelected(cur =>
+        offsetIndex(options.length, cur, 1),
+      );
   };
 
   useEffect(() => {
@@ -51,11 +67,16 @@ export function VideoPlayer() {
     [],
   );
 
-  function offsetRefsIndex(
+  function offsetIndex(
+    length: number,
     currentIndex: number,
     offset: number,
   ) {
-    return (currentIndex + offset) % refs.length;
+    const newIndex =
+      (currentIndex + offset) % length;
+    return newIndex < 0
+      ? newIndex + length
+      : newIndex;
   }
 
   const reducer = makeReducer(refs);
@@ -85,6 +106,22 @@ export function VideoPlayer() {
       : container.current!.requestFullscreen();
   };
 
+  const [progress, setProgress] = useState(3000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log('oi', progress);
+      if (progress > 0) {
+        setProgress(x => x - 10);
+      } else {
+        clearInterval(interval);
+      }
+    }, 10);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [progress]);
+
   return (
     <Flex
       ref={container}
@@ -93,31 +130,85 @@ export function VideoPlayer() {
       justifyContent='center'
       tabIndex={0}
       onKeyDown={keydownEvents}>
+      <Box
+        w='100%'
+        h='100%'
+        opacity='0.5'
+        // bg='red'
+        position='absolute'
+      />
       <Flex
         position='absolute'
         top='0'
         left='0'
+        w='100%'
+        h='100%'
+        flexDirection='column'
+        justifyContent='space-between'
         zIndex='10'>
-        <Button bg='black' onClick={togglePlay}>
-          {isPlaying ? 'Pause' : 'Play'}
-        </Button>
-        <Button
-          bg='black'
-          onClick={toggleFullscreen}>
-          {isFullscreen ? 'exit Full' : 'Full'}
-        </Button>
-        {/* <Button bg='black' onClick={handleNext}>
-        NEXT
-      </Button> */}
+        <Flex justifyContent='space-between'>
+          <Button bg='black' onClick={togglePlay}>
+            {isPlaying ? 'Pause' : 'Play'}
+          </Button>
+          <Button
+            bg='black'
+            onClick={toggleFullscreen}>
+            {isFullscreen ? 'exit Full' : 'Full'}
+          </Button>
+          {/* <Button bg='black' onClick={handleNext}>
+          NEXT
+        </Button> */}
+        </Flex>
         <Box
-          bg='tomato'
+          bg='primary'
+          opacity='0.7'
+          zIndex='20'
+          textAlign='center'
+          fontWeight='bold'
+          color='complementary'
+          fontSize={[
+            '1.2em',
+            '1.2em',
+            '1.3em',
+            '1.5em',
+            '2rem',
+          ]}
           visibility={
-            showChoices ? 'visible' : 'hidden'
+            !showChoices ? 'visible' : 'hidden'
           }>
-          OPTIONS!
+          <Flex>
+            <Progress
+              flexGrow={1}
+              max={3000}
+              min={0}
+              size='xs'
+              colorScheme='gray'
+              transform='scaleX(-1)'
+              value={progress}
+            />
+            <Progress
+              flexGrow={1}
+              max={3000}
+              min={0}
+              size='xs'
+              colorScheme='gray'
+              value={progress}
+            />
+          </Flex>
+          {options.map((op, index) => (
+            <Box
+              key={op}
+              filter={
+                index == selected
+                  ? 'drop-shadow(0 0 0.75rem yellow);'
+                  : ''
+              }>
+              {op}
+            </Box>
+          ))}
         </Box>
       </Flex>
-      <Box>
+      <Box zIndex='-1'>
         <video
           ref={ref0}
           src={videos[0]}
