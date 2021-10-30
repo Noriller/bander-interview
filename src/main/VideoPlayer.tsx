@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { Box, Flex } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/button';
-import { Progress } from '@chakra-ui/react';
+import { Progress, Img } from '@chakra-ui/react';
 declare const window: any;
 
 export function VideoPlayer() {
@@ -122,6 +122,25 @@ export function VideoPlayer() {
     };
   }, [progress]);
 
+  const handleOnVideoClick = (
+    e: React.MouseEvent<
+      HTMLDivElement,
+      MouseEvent
+    >,
+  ): void => {
+    if (
+      e.target == container.current?.children[1]
+    )
+      togglePlay();
+  };
+
+  const handleRightClick = (
+    e: React.MouseEvent<
+      HTMLDivElement,
+      MouseEvent
+    >,
+  ): void => e.preventDefault();
+
   return (
     <Flex
       ref={container}
@@ -129,13 +148,15 @@ export function VideoPlayer() {
       position='relative'
       justifyContent='center'
       tabIndex={0}
-      onKeyDown={keydownEvents}>
+      onKeyDown={keydownEvents}
+      onDoubleClick={toggleFullscreen}
+      onContextMenu={handleRightClick}
+      onClick={handleOnVideoClick}>
       <Box
         w='100%'
         h='100%'
-        opacity='0.5'
-        // bg='red'
         position='absolute'
+        pointerEvents='none'
       />
       <Flex
         position='absolute'
@@ -145,19 +166,52 @@ export function VideoPlayer() {
         h='100%'
         flexDirection='column'
         justifyContent='space-between'
-        zIndex='10'>
-        <Flex justifyContent='space-between'>
-          <Button bg='black' onClick={togglePlay}>
-            {isPlaying ? 'Pause' : 'Play'}
-          </Button>
+        zIndex='10'
+        sx={{
+          '&:hover .controls': {
+            opacity: 1,
+          },
+        }}>
+        <Flex
+          justifyContent='space-between'
+          className='controls'
+          pointerEvents='none'
+          opacity='0'>
           <Button
-            bg='black'
-            onClick={toggleFullscreen}>
-            {isFullscreen ? 'exit Full' : 'Full'}
+            bg='complementary'
+            margin='0.5em 0em 0em 0.5em'
+            pointerEvents='all'
+            onClick={togglePlay}>
+            <Img
+              src={
+                isPlaying
+                  ? '/pauseButton.svg'
+                  : '/playButton.svg'
+              }
+              alt='play Icon'
+              boxSize='1.5em'
+              objectFit='cover'
+            />
           </Button>
-          {/* <Button bg='black' onClick={handleNext}>
-          NEXT
-        </Button> */}
+          {/* <Button bg='complementary' onClick={handleNext}>
+            NEXT
+          </Button> */}
+          <Button
+            bg='complementary'
+            margin='0.5em 0.5em 0em 0em'
+            pointerEvents='all'
+            onClick={toggleFullscreen}>
+            <Img
+              src={
+                isFullscreen
+                  ? '/exitFullscreen.svg'
+                  : '/enterFullscreen.svg'
+              }
+              alt='fullscreen Icon'
+              boxSize='1.5em'
+              objectFit='cover'
+            />
+          </Button>
         </Flex>
         <Box
           bg='primary'
@@ -198,6 +252,7 @@ export function VideoPlayer() {
           {options.map((op, index) => (
             <Box
               key={op}
+              onClick={() => setSelected(index)}
               filter={
                 index == selected
                   ? 'drop-shadow(0 0 0.75rem yellow);'
