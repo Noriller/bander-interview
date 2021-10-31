@@ -56,9 +56,22 @@ export function VideoPlayer() {
         Boolean(document.fullscreenElement),
       );
     };
+    document.onkeydown = e => {
+      if (
+        document.activeElement ===
+        container.current
+      ) {
+        if (
+          e.key === 'ArrowUp' ||
+          e.key === 'ArrowDown'
+        )
+          e.preventDefault();
+      }
+    };
 
     return () => {
       document.onfullscreenchange = null;
+      document.onkeydown = null;
     };
   }, []);
 
@@ -109,7 +122,6 @@ export function VideoPlayer() {
   const [progress, setProgress] = useState(3000);
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log('oi', progress);
       if (progress > 0) {
         setProgress(x => x - 10);
       } else {
