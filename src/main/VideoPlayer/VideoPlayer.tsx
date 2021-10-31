@@ -171,7 +171,7 @@ export function VideoPlayer({
               onClick={() => setSelected(index)}
               filter={
                 index == selected
-                  ? 'drop-shadow(0 0 0.75rem yellow);'
+                  ? 'drop-shadow(0 0 0.75rem var(--chakra-colors-contrast));'
                   : ''
               }>
               {op}

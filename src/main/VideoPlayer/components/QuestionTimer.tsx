@@ -37,22 +37,31 @@ export function QuestionTimer({
   }, [timerActive]);
 
   return (
-    <Flex>
+    <Flex
+      sx={{
+        '.progress': {
+          bg: 'complementary',
+          filter: 'opacity(0.7)',
+          div: {
+            bg: 'contrast',
+          },
+        },
+      }}>
       <Progress
+        className='progress'
         flexGrow={1}
         max={3000}
         min={0}
         size='xs'
-        colorScheme='gray'
         transform='scaleX(-1)'
         value={progress}
       />
       <Progress
+        className='progress'
         flexGrow={1}
         max={3000}
         min={0}
         size='xs'
-        colorScheme='gray'
         value={progress}
       />
     </Flex>
