@@ -1,5 +1,4 @@
-import React, {
-  useEffect,
+import {
   useMemo,
   useReducer,
   useRef,

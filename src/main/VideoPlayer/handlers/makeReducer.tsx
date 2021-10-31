@@ -21,8 +21,13 @@ export function makeReducer(
           isPlaying: action.payload,
         };
       case 'prepareNext':
-        // start loading all next videos
-        // update options
+        refs.forEach((ref, index) => {
+          if (index !== state.currentVideo) {
+            ref.current!.src =
+              action.payload[index];
+          }
+        });
+
         return {
           ...state,
           showChoices: true,
