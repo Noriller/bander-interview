@@ -30,14 +30,16 @@ export function makeReducer(
       case 'changeCurrent':
         refs.forEach((ref, index) => {
           if (index === action.payload) {
-            ref.current!.currentTime = 0;
+            ref.current!.preload = 'auto';
+            ref.current!.currentTime = 0.1;
             ref.current!.play();
             ref.current!.style.display = 'block';
           } else {
             ref.current!.pause();
             ref.current!.style.display = 'none';
+            ref.current!.preload = 'metadata';
             ref.current!.ontimeupdate = null;
-            // ref.current!.src = '';
+            ref.current!.src = '';
           }
         });
 

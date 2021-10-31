@@ -1,18 +1,15 @@
 import { RefObject } from 'react';
 
-export type Actions = {
-  payload?: string | number | boolean;
-  refs?: RefObject<HTMLVideoElement>[];
-} & (
+export type Actions =
   | {
       type: 'playToggle';
       payload: boolean;
     }
   | {
       type: 'prepareNext';
+      payload: string[];
     }
   | {
       type: 'changeCurrent';
       payload: number;
-    }
-);
+    };

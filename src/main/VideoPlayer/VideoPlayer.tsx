@@ -16,7 +16,8 @@ import { FullscreenButton } from './components/FullscreenButton';
 import { initialReducerState } from './helpers/initialReducerState';
 import { mockVideos, mockOptions } from './mocks';
 import { usePageListeners } from './handlers/usePageListeners';
-import { Button } from '@chakra-ui/button';
+import { useResetSelected } from './handlers/useResetSelected';
+import { useTimeUpdateTriggerNext } from './handlers/useTimeUpdateTriggerNext';
 declare const window: any;
 
 export function VideoPlayer({
@@ -59,21 +60,14 @@ export function VideoPlayer({
     }
   };
 
-  useEffect(() => {
-    refs[currentVideo].current!.ontimeupdate =
-      () => {
-        const leftDuration =
-          refs[currentVideo].current!.duration -
-          refs[currentVideo].current!.currentTime;
-        if (leftDuration < 4) {
-          console.log('next');
-          refs[
-            currentVideo
-          ].current!.ontimeupdate = null;
-          dispatch({ type: 'prepareNext' });
-        }
-      };
-  }, [currentVideo, refs, showChoices]);
+  useResetSelected(showChoices, setSelected);
+
+  useTimeUpdateTriggerNext(
+    refs,
+    currentVideo,
+    dispatch,
+    showChoices,
+  );
 
   usePageListeners(setFullscreen, container);
 
@@ -200,7 +194,7 @@ export function VideoPlayer({
         <video
           ref={ref1}
           src={videos[1]}
-          preload='auto'
+          preload='metadata'
           playsInline
           style={{
             display: 'none',
@@ -210,7 +204,7 @@ export function VideoPlayer({
         <video
           ref={ref2}
           src={videos[2]}
-          preload='auto'
+          preload='metadata'
           playsInline
           style={{
             display: 'none',
@@ -220,7 +214,7 @@ export function VideoPlayer({
         <video
           ref={ref3}
           src={videos[3]}
-          preload='auto'
+          preload='metadata'
           playsInline
           style={{
             display: 'none',
