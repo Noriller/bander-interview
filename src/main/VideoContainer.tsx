@@ -1,5 +1,5 @@
 import { Center } from '@chakra-ui/layout';
-import { VideoPlayer } from './VideoPlayer';
+import { VideoPlayer } from './VideoPlayer/VideoPlayer';
 
 export function VideoContainer() {
   return (
