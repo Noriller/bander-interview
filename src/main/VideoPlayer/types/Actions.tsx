@@ -9,15 +9,10 @@ export type Actions = {
       payload: boolean;
     }
   | {
-      type: 'initialize';
-      payload: never;
-    }
-  | {
       type: 'prepareNext';
-      payload: never;
     }
   | {
       type: 'changeCurrent';
-      payload: never;
+      payload: number;
     }
 );

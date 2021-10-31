@@ -1,4 +1,5 @@
-import {
+import React, {
+  useEffect,
   useMemo,
   useReducer,
   useRef,
@@ -15,6 +16,7 @@ import { FullscreenButton } from './components/FullscreenButton';
 import { initialReducerState } from './helpers/initialReducerState';
 import { mockVideos, mockOptions } from './mocks';
 import { usePageListeners } from './handlers/usePageListeners';
+import { Button } from '@chakra-ui/button';
 declare const window: any;
 
 export function VideoPlayer({
@@ -36,12 +38,42 @@ export function VideoPlayer({
     () => [ref0, ref1, ref2, ref3],
     [],
   );
-
+  // window.coxinha = refs;
   const reducer = makeReducer(refs);
   const [
     { isPlaying, showChoices, currentVideo },
     dispatch,
   ] = useReducer(reducer, initialReducerState);
+
+  const dispatchNextQuestion = () => {
+    const nextIndex = offsetIndex(
+      refs.length,
+      currentVideo,
+      selected + 1,
+    );
+    if (showChoices) {
+      dispatch({
+        type: 'changeCurrent',
+        payload: nextIndex,
+      });
+    }
+  };
+
+  useEffect(() => {
+    refs[currentVideo].current!.ontimeupdate =
+      () => {
+        const leftDuration =
+          refs[currentVideo].current!.duration -
+          refs[currentVideo].current!.currentTime;
+        if (leftDuration < 4) {
+          console.log('next');
+          refs[
+            currentVideo
+          ].current!.ontimeupdate = null;
+          dispatch({ type: 'prepareNext' });
+        }
+      };
+  }, [currentVideo, refs, showChoices]);
 
   usePageListeners(setFullscreen, container);
 
@@ -105,7 +137,10 @@ export function VideoPlayer({
             togglePlay={togglePlay}
             isPlaying={isPlaying}
           />
-          {/* <Button bg='complementary' onClick={handleNext}>
+          {/* <Button
+            bg='complementary'
+            pointerEvents='all'
+            onClick={dispatchNextQuestion}>
             NEXT
           </Button> */}
           <FullscreenButton
@@ -128,9 +163,15 @@ export function VideoPlayer({
             '2rem',
           ]}
           visibility={
-            !showChoices ? 'visible' : 'hidden'
+            showChoices ? 'visible' : 'hidden'
           }>
-          <QuestionTimer timerActive={true} />
+          <QuestionTimer
+            timerActive={showChoices}
+            isPlaying={isPlaying}
+            dispatchNextQuestion={
+              dispatchNextQuestion
+            }
+          />
           {options.map((op, index) => (
             <Box
               key={op}
@@ -153,6 +194,7 @@ export function VideoPlayer({
           playsInline
           style={{
             display: 'block',
+            transition: 'all 0.3s ease-in-out 0s',
           }}
         />
         <video
@@ -162,6 +204,7 @@ export function VideoPlayer({
           playsInline
           style={{
             display: 'none',
+            transition: 'all 0.3s ease-in-out 0s',
           }}
         />
         <video
@@ -171,6 +214,7 @@ export function VideoPlayer({
           playsInline
           style={{
             display: 'none',
+            transition: 'all 0.3s ease-in-out 0s',
           }}
         />
         <video
@@ -180,6 +224,7 @@ export function VideoPlayer({
           playsInline
           style={{
             display: 'none',
+            transition: 'all 0.3s ease-in-out 0s',
           }}
         />
       </Box>

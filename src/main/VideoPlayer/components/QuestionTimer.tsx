@@ -4,26 +4,36 @@ import { Progress } from '@chakra-ui/react';
 
 export function QuestionTimer({
   timerActive,
+  isPlaying,
+  dispatchNextQuestion,
 }: {
   timerActive: boolean;
+  isPlaying: boolean;
+  dispatchNextQuestion: () => void;
 }) {
   const [progress, setProgress] = useState(0);
+
   useEffect(() => {
     const interval = setInterval(() => {
-      if (progress > 0) {
+      if (isPlaying && progress > 0) {
         setProgress(x => x - 10);
       } else {
         clearInterval(interval);
+        if (isPlaying && progress < 10) {
+          dispatchNextQuestion();
+        }
       }
     }, 10);
 
     return () => {
       clearInterval(interval);
     };
-  }, [progress]);
+  }, [progress, isPlaying, dispatchNextQuestion]);
 
   useEffect(() => {
-    setProgress(3000);
+    if (timerActive) {
+      setProgress(3000);
+    }
   }, [timerActive]);
 
   return (

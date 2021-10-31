@@ -8,7 +8,6 @@ export function makeReducer(
   return (state: State, action: Actions) => {
     switch (action.type) {
       case 'playToggle':
-        console.log(action);
         action.payload
           ? refs[
               state.currentVideo
@@ -21,24 +20,31 @@ export function makeReducer(
           ...state,
           isPlaying: action.payload,
         };
-      case 'initialize':
-        return {
-          ...state,
-        };
       case 'prepareNext':
         // start loading all next videos
         // update options
         return {
           ...state,
+          showChoices: true,
         };
       case 'changeCurrent':
-        // change current video
-        // clear all the rest
-        // show new current
-        // hide previous
-        // clear sources
+        refs.forEach((ref, index) => {
+          if (index === action.payload) {
+            ref.current!.currentTime = 0;
+            ref.current!.play();
+            ref.current!.style.display = 'block';
+          } else {
+            ref.current!.pause();
+            ref.current!.style.display = 'none';
+            ref.current!.ontimeupdate = null;
+            // ref.current!.src = '';
+          }
+        });
+
         return {
           ...state,
+          currentVideo: action.payload,
+          showChoices: false,
         };
       default:
         throw new Error();
