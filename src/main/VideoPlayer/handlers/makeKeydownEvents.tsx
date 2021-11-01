@@ -11,18 +11,18 @@ export function makeKeydownEvents(
     currentIndex: number,
     offset: number,
   ) => number,
-  options: string[],
+  optionsLength: number,
 ) {
   return (event: React.KeyboardEvent): void => {
     if (event.key === 'f') toggleFullscreen();
     if (event.key === ' ') togglePlay();
     if (event.key === 'ArrowUp')
       setSelected(cur =>
-        offsetIndex(options.length, cur, -1),
+        offsetIndex(optionsLength, cur, -1),
       );
     if (event.key === 'ArrowDown')
       setSelected(cur =>
-        offsetIndex(options.length, cur, 1),
+        offsetIndex(optionsLength, cur, 1),
       );
   };
 }

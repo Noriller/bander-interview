@@ -9,7 +9,7 @@ import { Actions } from '../types/Actions';
 export function useTimeUpdateTriggerNext(
   refs: RefObject<HTMLVideoElement>[],
   currentVideo: number,
-  dispatch: Dispatch<Actions>,
+  playerDispatch: Dispatch<Actions>,
   showChoices: boolean,
 ) {
   useEffect(() => {
@@ -22,11 +22,16 @@ export function useTimeUpdateTriggerNext(
           refs[
             currentVideo
           ].current!.ontimeupdate = null;
-          dispatch({
+          playerDispatch({
             type: 'prepareNext',
             payload: mockVideos,
           });
         }
       };
-  }, [currentVideo, dispatch, refs, showChoices]);
+  }, [
+    currentVideo,
+    playerDispatch,
+    refs,
+    showChoices,
+  ]);
 }
