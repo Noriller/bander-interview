@@ -18,7 +18,7 @@ const coisa = {
   wasSeen: false,
 };
 
-const mockShenanigans: VideoTree = {
+export const mockShenanigans: VideoTree = {
   entryVideo: {
     videoSrc: '',
     videoTitle: 'Start the interview!',

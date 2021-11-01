@@ -1,27 +1,21 @@
-import {
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Box, Flex } from '@chakra-ui/layout';
 import { makeKeydownEvents } from './handlers/makeKeydownEvents';
-import { makeReducer } from './handlers/makeReducer';
 import { offsetIndex } from './helpers/offsetIndex';
 import { makeHandlers } from './handlers/makeHandlers';
 import { PlayButton } from './components/PlayButton';
 import { QuestionTimer } from './components/QuestionTimer';
 import { FullscreenButton } from './components/FullscreenButton';
-import { initialReducerState } from './helpers/initialReducerState';
-import { mockVideos, mockOptions } from './mocks';
 import { usePageListeners } from './handlers/usePageListeners';
 import { useResetSelected } from './handlers/useResetSelected';
 import { useTimeUpdateTriggerNext } from './handlers/useTimeUpdateTriggerNext';
-declare const window: any;
+import { VideoTree } from './types/Video';
+import { usePlayerReducer } from './handlers/usePlayerReducer';
 
 export function VideoPlayer({
-  videos = mockVideos,
-  options = mockOptions,
+  videosData,
+}: {
+  videosData: VideoTree;
 }) {
   const ref0 = useRef<HTMLVideoElement>(null);
   const ref1 = useRef<HTMLVideoElement>(null);
@@ -38,12 +32,13 @@ export function VideoPlayer({
     () => [ref0, ref1, ref2, ref3],
     [],
   );
-  // window.coxinha = refs;
-  const reducer = makeReducer(refs);
-  const [
-    { isPlaying, showChoices, currentVideo },
-    dispatch,
-  ] = useReducer(reducer, initialReducerState);
+
+  const {
+    isPlaying,
+    showChoices,
+    currentVideo,
+    playerDispatch,
+  } = usePlayerReducer(refs);
 
   const dispatchNextQuestion = () => {
     const nextIndex = offsetIndex(
@@ -52,19 +47,24 @@ export function VideoPlayer({
       selected + 1,
     );
     if (showChoices) {
-      dispatch({
+      playerDispatch({
         type: 'changeCurrent',
         payload: nextIndex,
       });
     }
   };
 
+  const options = getOptions(
+    videosData,
+    refs[currentVideo].current?.src,
+  );
+
   useResetSelected(showChoices, setSelected);
 
   useTimeUpdateTriggerNext(
     refs,
     currentVideo,
-    dispatch,
+    playerDispatch,
     showChoices,
   );
 
@@ -76,7 +76,7 @@ export function VideoPlayer({
     handleRightClick,
     handleOnVideoClick,
   } = makeHandlers(
-    dispatch,
+    playerDispatch,
     isPlaying,
     isFullscreen,
     container,
@@ -87,7 +87,7 @@ export function VideoPlayer({
     togglePlay,
     setSelected,
     offsetIndex,
-    options,
+    options?.length || 0,
   );
 
   return (
@@ -165,9 +165,9 @@ export function VideoPlayer({
               dispatchNextQuestion
             }
           />
-          {options.map((op, index) => (
+          {options?.map((op, index) => (
             <Box
-              key={op}
+              key={op.videoTitle}
               onClick={() => setSelected(index)}
               filter={
                 index == selected
@@ -182,7 +182,7 @@ export function VideoPlayer({
       <Box zIndex='-1'>
         <video
           ref={ref0}
-          src={videos[0]}
+          src={videosData.entryVideo.videoSrc}
           preload='auto'
           playsInline
           style={{
@@ -192,7 +192,7 @@ export function VideoPlayer({
         />
         <video
           ref={ref1}
-          src={videos[1]}
+          src={''}
           preload='metadata'
           playsInline
           style={{
@@ -202,7 +202,7 @@ export function VideoPlayer({
         />
         <video
           ref={ref2}
-          src={videos[2]}
+          src={''}
           preload='metadata'
           playsInline
           style={{
@@ -212,7 +212,7 @@ export function VideoPlayer({
         />
         <video
           ref={ref3}
-          src={videos[3]}
+          src={''}
           preload='metadata'
           playsInline
           style={{
@@ -224,3 +224,14 @@ export function VideoPlayer({
     </Flex>
   );
 }
+
+function getOptions(
+  tree: VideoTree,
+  currentSrc: string = tree.entryVideo.videoSrc,
+) {
+  return tree.entryVideo.children;
+}
+
+// const optionsReducer = (acc, cur) => {
+//   return [...acc, cur.videoTitle];
+// }
