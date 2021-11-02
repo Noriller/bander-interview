@@ -1,6 +1,8 @@
 import React from 'react';
 import { State } from '../types/State';
 import { Actions } from '../types/Actions';
+import { Video } from '../types/Video';
+import { offsetIndex } from '../helpers/offsetIndex';
 
 export function makeReducer(
   refs: React.RefObject<HTMLVideoElement>[],
@@ -10,10 +12,10 @@ export function makeReducer(
       case 'playToggle':
         action.payload
           ? refs[
-              state.currentVideo
+              state.currentVideoPlayer
             ].current!.play()
           : refs[
-              state.currentVideo
+              state.currentVideoPlayer
             ].current!.pause();
 
         return {
@@ -21,12 +23,26 @@ export function makeReducer(
           isPlaying: action.payload,
         };
       case 'prepareNext':
-        refs.forEach((ref, index) => {
-          if (index !== state.currentVideo) {
-            ref.current!.src =
-              action.payload[index];
-          }
-        });
+        const children =
+          state.currentVideo.children;
+        if (!children) {
+          return {
+            ...state,
+          };
+        }
+
+        children.forEach(
+          (child: Video, index: number) => {
+            const newIndex = offsetIndex(
+              refs.length,
+              state.currentVideoPlayer,
+              index + 1,
+            );
+            refs[newIndex].current!.src =
+              child.videoSrc ||
+              'http://127.0.0.1:8081/timeline/vid04.mp4';
+          },
+        );
 
         return {
           ...state,
@@ -34,7 +50,9 @@ export function makeReducer(
         };
       case 'changeCurrent':
         refs.forEach((ref, index) => {
-          if (index === action.payload) {
+          if (
+            index === action.payload.nextIndex
+          ) {
             ref.current!.preload = 'auto';
             ref.current!.currentTime = 0.1;
             ref.current!.play();
@@ -50,7 +68,10 @@ export function makeReducer(
 
         return {
           ...state,
-          currentVideo: action.payload,
+          currentVideoPlayer:
+            action.payload.nextIndex,
+          currentVideo:
+            action.payload.nextCurrentVideo,
           showChoices: false,
         };
       default:

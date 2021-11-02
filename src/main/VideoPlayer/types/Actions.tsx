@@ -1,3 +1,5 @@
+import { Video } from './Video';
+
 export type Actions =
   | {
       type: 'playToggle';
@@ -5,9 +7,11 @@ export type Actions =
     }
   | {
       type: 'prepareNext';
-      payload: string[];
     }
   | {
       type: 'changeCurrent';
-      payload: number;
+      payload: {
+        nextIndex: number;
+        nextCurrentVideo: Video;
+      };
     };

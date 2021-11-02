@@ -1,21 +1,29 @@
 import { Center } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import { mockShenanigans } from './VideoPlayer/mocks';
-import { VideoTree } from './VideoPlayer/types/Video';
+import {
+  Video,
+  VideoData,
+} from './VideoPlayer/types/Video';
 import { VideoPlayer } from './VideoPlayer/VideoPlayer';
 
 export function VideoContainer() {
-  const [videosData, setVideosData] =
-    useState<VideoTree>({} as VideoTree);
+  const [videoTree, setVideosData] =
+    useState<Video>({} as Video);
 
   useEffect(() => {
     const timeouts = setTimeout(
-      () => setVideosData(mockShenanigans),
+      () =>
+        // make tree from VideoData
+        setVideosData(mockShenanigans.entryVideo),
       200,
     );
     return () => clearTimeout(timeouts);
   }, []);
 
+  if (!videoTree.videoTitle) {
+    return <Center>Loading...</Center>;
+  }
   return (
     <Center
       as='main'
@@ -29,7 +37,7 @@ export function VideoContainer() {
           '80%',
           '70%',
         ]}>
-        <VideoPlayer videosData={videosData} />
+        <VideoPlayer videoTree={videoTree} />
       </Center>
     </Center>
   );

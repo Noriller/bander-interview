@@ -8,28 +8,30 @@ import { Actions } from '../types/Actions';
 
 export function useTimeUpdateTriggerNext(
   refs: RefObject<HTMLVideoElement>[],
-  currentVideo: number,
+  currentVideoPlayer: number,
   playerDispatch: Dispatch<Actions>,
   showChoices: boolean,
 ) {
   useEffect(() => {
-    refs[currentVideo].current!.ontimeupdate =
-      () => {
-        const leftDuration =
-          refs[currentVideo].current!.duration -
-          refs[currentVideo].current!.currentTime;
-        if (leftDuration < 4) {
-          refs[
-            currentVideo
-          ].current!.ontimeupdate = null;
-          playerDispatch({
-            type: 'prepareNext',
-            payload: mockVideos,
-          });
-        }
-      };
+    refs[
+      currentVideoPlayer
+    ].current!.ontimeupdate = () => {
+      const leftDuration =
+        refs[currentVideoPlayer].current!
+          .duration -
+        refs[currentVideoPlayer].current!
+          .currentTime;
+      if (leftDuration < 4) {
+        refs[
+          currentVideoPlayer
+        ].current!.ontimeupdate = null;
+        playerDispatch({
+          type: 'prepareNext',
+        });
+      }
+    };
   }, [
-    currentVideo,
+    currentVideoPlayer,
     playerDispatch,
     refs,
     showChoices,

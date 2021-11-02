@@ -5,7 +5,7 @@ export interface Video {
   children?: Video[];
 }
 
-export interface VideoTree {
+export interface VideoData {
   entryVideo: Video;
   firstPartVideos: Video[];
   secondPartVideos: Video[];

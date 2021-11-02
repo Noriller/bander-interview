@@ -1,4 +1,4 @@
-import { VideoTree } from './types/Video';
+import { VideoData } from './types/Video';
 
 export const mockVideos = [
   'http://127.0.0.1:8081/timeline/vid01.mp4',
@@ -18,7 +18,7 @@ const coisa = {
   wasSeen: false,
 };
 
-export const mockShenanigans: VideoTree = {
+export const mockShenanigans: VideoData = {
   entryVideo: {
     videoSrc: '',
     videoTitle: 'Start the interview!',

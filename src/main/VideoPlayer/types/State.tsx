@@ -1,5 +1,8 @@
+import { Video } from './Video';
+
 export interface State {
   isPlaying: boolean;
   showChoices: boolean;
-  currentVideo: number;
+  currentVideoPlayer: number;
+  currentVideo: Video;
 }

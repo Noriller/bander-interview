@@ -9,13 +9,13 @@ import { FullscreenButton } from './components/FullscreenButton';
 import { usePageListeners } from './handlers/usePageListeners';
 import { useResetSelected } from './handlers/useResetSelected';
 import { useTimeUpdateTriggerNext } from './handlers/useTimeUpdateTriggerNext';
-import { VideoTree } from './types/Video';
+import { Video } from './types/Video';
 import { usePlayerReducer } from './handlers/usePlayerReducer';
 
 export function VideoPlayer({
-  videosData,
+  videoTree,
 }: {
-  videosData: VideoTree;
+  videoTree: Video;
 }) {
   const ref0 = useRef<HTMLVideoElement>(null);
   const ref1 = useRef<HTMLVideoElement>(null);
@@ -36,34 +36,33 @@ export function VideoPlayer({
   const {
     isPlaying,
     showChoices,
+    currentVideoPlayer,
     currentVideo,
     playerDispatch,
-  } = usePlayerReducer(refs);
+  } = usePlayerReducer(refs, videoTree);
 
   const dispatchNextQuestion = () => {
     const nextIndex = offsetIndex(
       refs.length,
-      currentVideo,
+      currentVideoPlayer,
       selected + 1,
     );
     if (showChoices) {
       playerDispatch({
         type: 'changeCurrent',
-        payload: nextIndex,
+        payload: {
+          nextIndex,
+          nextCurrentVideo: currentVideo.children?.[selected] ?? currentVideo,
+        },
       });
     }
   };
-
-  const options = getOptions(
-    videosData,
-    refs[currentVideo].current?.src,
-  );
 
   useResetSelected(showChoices, setSelected);
 
   useTimeUpdateTriggerNext(
     refs,
-    currentVideo,
+    currentVideoPlayer,
     playerDispatch,
     showChoices,
   );
@@ -87,7 +86,7 @@ export function VideoPlayer({
     togglePlay,
     setSelected,
     offsetIndex,
-    options?.length || 0,
+    currentVideo.children?.length || 0,
   );
 
   return (
@@ -136,6 +135,7 @@ export function VideoPlayer({
             onClick={dispatchNextQuestion}>
             NEXT
           </Button> */}
+          <div>{currentVideo.videoTitle || 'oi'}</div>
           <FullscreenButton
             toggleFullscreen={toggleFullscreen}
             isFullscreen={isFullscreen}
@@ -165,24 +165,27 @@ export function VideoPlayer({
               dispatchNextQuestion
             }
           />
-          {options?.map((op, index) => (
-            <Box
-              key={op.videoTitle}
-              onClick={() => setSelected(index)}
-              filter={
-                index == selected
-                  ? 'drop-shadow(0 0 0.75rem var(--chakra-colors-contrast));'
-                  : ''
-              }>
-              {op}
-            </Box>
-          ))}
+          {currentVideo.children?.map(
+            (op: Video, index: number) => (
+              <Box
+                key={op.videoTitle}
+                onClick={() => setSelected(index)}
+                filter={
+                  index == selected
+                    ? 'drop-shadow(0 0 0.75rem var(--chakra-colors-contrast));'
+                    : ''
+                }>
+                {op.videoTitle}{' '}
+                {op.wasSeen ? '✅' : ''}
+              </Box>
+            ),
+          )}
         </Box>
       </Flex>
       <Box zIndex='-1'>
         <video
           ref={ref0}
-          src={videosData.entryVideo.videoSrc}
+          src={videoTree.videoSrc || 'http://127.0.0.1:8081/timeline/vid04.mp4'}
           preload='auto'
           playsInline
           style={{
@@ -225,13 +228,78 @@ export function VideoPlayer({
   );
 }
 
-function getOptions(
-  tree: VideoTree,
-  currentSrc: string = tree.entryVideo.videoSrc,
-) {
-  return tree.entryVideo.children;
-}
+// interface State {
+//   options: string[];
+//   currentStep:
+//     | 'entryVideo'
+//     | 'firstPartVideos'
+//     | 'secondPartVideos'
+//     | 'finalVideo';
+//   currentTime: number;
+//   tree: VideoTree;
+//   finished: boolean;
+// }
 
-// const optionsReducer = (acc, cur) => {
-//   return [...acc, cur.videoTitle];
+// interface Action {
+//   type: string;
+//   payload?: Video;
+// }
+
+// const optionsReducer = (
+//   state: State,
+//   action: Action,
+// ) => {
+//   if (state.finished) return state;
+
+//   if (state.options.length === 0) {
+//     switch (state.currentStep) {
+//       case 'entryVideo':
+//         state.currentStep = 'firstPartVideos';
+//         break;
+//       case 'firstPartVideos':
+//       case 'secondPartVideos':
+//       case 'finalVideo':
+//         return {
+//           ...state,
+//           finished: true,
+//         };
+//     }
+//   }
+
+//   switch (state.currentStep) {
+//     case 'entryVideo':
+//     case 'finalVideo':
+//       const newOptions = action.payload?.children;
+//       return {
+//         ...state,
+//         options: newOptions,
+//       };
+//     case 'firstPartVideos':
+//     case 'secondPartVideos':
+//       return {
+//         ...state,
+//         options: [''],
+//       };
+//   }
+// };
+
+// function getOptions(
+//   tree: VideoTree,
+//   currentStep:
+//     | 'firstPartVideos'
+//     | 'secondPartVideos'
+//     | 'extraVideos',
+//   quantity: number = 2,
+// ) {
+//   const options = [
+//     ...tree[currentStep].filter(v => !v.wasSeen),
+//   ];
+//   for (let i = options.length - 1; i > 0; i--) {
+//     const j = Math.floor(Math.random() * (i + 1));
+//     [options[i], options[j]] = [
+//       options[j],
+//       options[i],
+//     ];
+//   }
+//   return options.slice(0, quantity);
 // }
