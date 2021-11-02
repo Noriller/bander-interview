@@ -11,7 +11,6 @@ export function PlayButton({
   return (
     <Button
       bg='complementary'
-      margin='0.5em 0em 0em 0.5em'
       pointerEvents='all'
       onClick={togglePlay}>
       <Img

@@ -11,7 +11,6 @@ export function FullscreenButton({
   return (
     <Button
       bg='complementary'
-      margin='0.5em 0.5em 0em 0em'
       pointerEvents='all'
       onClick={toggleFullscreen}>
       <Img

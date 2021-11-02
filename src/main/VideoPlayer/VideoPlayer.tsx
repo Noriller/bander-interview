@@ -1,5 +1,9 @@
 import { useMemo, useRef, useState } from 'react';
-import { Box, Flex } from '@chakra-ui/layout';
+import {
+  Box,
+  Center,
+  Flex,
+} from '@chakra-ui/layout';
 import { makeKeydownEvents } from './handlers/makeKeydownEvents';
 import { offsetIndex } from './helpers/offsetIndex';
 import { makeHandlers } from './handlers/makeHandlers';
@@ -52,7 +56,9 @@ export function VideoPlayer({
         type: 'changeCurrent',
         payload: {
           nextIndex,
-          nextCurrentVideo: currentVideo.children?.[selected] ?? currentVideo,
+          nextCurrentVideo:
+            currentVideo.children?.[selected] ??
+            currentVideo,
         },
       });
     }
@@ -115,6 +121,13 @@ export function VideoPlayer({
         flexDirection='column'
         justifyContent='space-between'
         zIndex='10'
+        fontSize={[
+          '1.2em',
+          '1.2em',
+          '1.3em',
+          '1.5em',
+          '2rem',
+        ]}
         sx={{
           '&:hover .controls': {
             opacity: 1,
@@ -124,18 +137,23 @@ export function VideoPlayer({
           justifyContent='space-between'
           className='controls'
           pointerEvents='none'
+          p='0.5em'
+          transition='opacity 0.2s'
           opacity='0'>
           <PlayButton
             togglePlay={togglePlay}
             isPlaying={isPlaying}
           />
-          {/* <Button
-            bg='complementary'
-            pointerEvents='all'
-            onClick={dispatchNextQuestion}>
-            NEXT
-          </Button> */}
-          <div>{currentVideo.videoTitle || 'oi'}</div>
+          <Center
+            bg='secondary'
+            w='50%'
+            opacity='0.7'
+            borderRadius='2xl'
+            p='0.5em'
+            textAlign='center'
+            fontWeight='bold'>
+            {currentVideo.videoTitle}
+          </Center>
           <FullscreenButton
             toggleFullscreen={toggleFullscreen}
             isFullscreen={isFullscreen}
@@ -148,13 +166,6 @@ export function VideoPlayer({
           textAlign='center'
           fontWeight='bold'
           color='complementary'
-          fontSize={[
-            '1.2em',
-            '1.2em',
-            '1.3em',
-            '1.5em',
-            '2rem',
-          ]}
           visibility={
             showChoices ? 'visible' : 'hidden'
           }>
@@ -185,7 +196,10 @@ export function VideoPlayer({
       <Box zIndex='-1'>
         <video
           ref={ref0}
-          src={videoTree.videoSrc || 'http://127.0.0.1:8081/timeline/vid04.mp4'}
+          src={
+            videoTree.videoSrc ||
+            'http://127.0.0.1:8081/timeline/vid04.mp4'
+          }
           preload='auto'
           playsInline
           style={{
@@ -227,79 +241,3 @@ export function VideoPlayer({
     </Flex>
   );
 }
-
-// interface State {
-//   options: string[];
-//   currentStep:
-//     | 'entryVideo'
-//     | 'firstPartVideos'
-//     | 'secondPartVideos'
-//     | 'finalVideo';
-//   currentTime: number;
-//   tree: VideoTree;
-//   finished: boolean;
-// }
-
-// interface Action {
-//   type: string;
-//   payload?: Video;
-// }
-
-// const optionsReducer = (
-//   state: State,
-//   action: Action,
-// ) => {
-//   if (state.finished) return state;
-
-//   if (state.options.length === 0) {
-//     switch (state.currentStep) {
-//       case 'entryVideo':
-//         state.currentStep = 'firstPartVideos';
-//         break;
-//       case 'firstPartVideos':
-//       case 'secondPartVideos':
-//       case 'finalVideo':
-//         return {
-//           ...state,
-//           finished: true,
-//         };
-//     }
-//   }
-
-//   switch (state.currentStep) {
-//     case 'entryVideo':
-//     case 'finalVideo':
-//       const newOptions = action.payload?.children;
-//       return {
-//         ...state,
-//         options: newOptions,
-//       };
-//     case 'firstPartVideos':
-//     case 'secondPartVideos':
-//       return {
-//         ...state,
-//         options: [''],
-//       };
-//   }
-// };
-
-// function getOptions(
-//   tree: VideoTree,
-//   currentStep:
-//     | 'firstPartVideos'
-//     | 'secondPartVideos'
-//     | 'extraVideos',
-//   quantity: number = 2,
-// ) {
-//   const options = [
-//     ...tree[currentStep].filter(v => !v.wasSeen),
-//   ];
-//   for (let i = options.length - 1; i > 0; i--) {
-//     const j = Math.floor(Math.random() * (i + 1));
-//     [options[i], options[j]] = [
-//       options[j],
-//       options[i],
-//     ];
-//   }
-//   return options.slice(0, quantity);
-// }
