@@ -43,6 +43,7 @@ export function QualityMenu({
             pointerEvents='all'
             _hover={{
               bg: 'secondary',
+              color: 'contrast',
             }}
             _focus={{
               bg: 'secondary',

@@ -1,20 +1,21 @@
-import { useMemo, useRef, useState } from 'react';
 import {
   Box,
   Center,
   Flex,
 } from '@chakra-ui/layout';
-import { makeKeydownEvents } from './handlers/makeKeydownEvents';
-import { offsetIndex } from './helpers/offsetIndex';
-import { makeHandlers } from './handlers/makeHandlers';
+import { useMemo, useRef, useState } from 'react';
+import { FullscreenButton } from './components/FullscreenButton';
 import { PlayButton } from './components/PlayButton';
 import { QuestionTimer } from './components/QuestionTimer';
-import { FullscreenButton } from './components/FullscreenButton';
+import { makeHandlers } from './handlers/makeHandlers';
+import { makeKeydownEvents } from './handlers/makeKeydownEvents';
 import { usePageListeners } from './handlers/usePageListeners';
+import { usePlayerReducer } from './handlers/usePlayerReducer';
 import { useResetSelected } from './handlers/useResetSelected';
 import { useTimeUpdateTriggerNext } from './handlers/useTimeUpdateTriggerNext';
+import { offsetIndex } from './helpers/offsetIndex';
+import { QualityMenu } from './QualityMenu';
 import { Video } from './types/Video';
-import { usePlayerReducer } from './handlers/usePlayerReducer';
 
 export function VideoPlayer({
   videoTree,
@@ -30,6 +31,7 @@ export function VideoPlayer({
 
   const [isFullscreen, setFullscreen] =
     useState(false);
+  const [quality, setQuality] = useState(1080);
   const [selected, setSelected] = useState(0);
 
   const refs = useMemo(
@@ -133,13 +135,13 @@ export function VideoPlayer({
             opacity: 1,
           },
         }}>
-        <Flex
+        <Center
           justifyContent='space-between'
           className='controls'
           pointerEvents='none'
           p='0.5em'
-          transition='opacity 0.2s'
-          opacity='0'>
+          transition='all 0.2s'
+          opacity='1'>
           <PlayButton
             togglePlay={togglePlay}
             isPlaying={isPlaying}
@@ -150,15 +152,24 @@ export function VideoPlayer({
             opacity='0.7'
             borderRadius='2xl'
             p='0.5em'
+            marginBottom='auto'
             textAlign='center'
             fontWeight='bold'>
             {currentVideo.videoTitle}
           </Center>
-          <FullscreenButton
-            toggleFullscreen={toggleFullscreen}
-            isFullscreen={isFullscreen}
-          />
-        </Flex>
+          <Center
+            flexDirection='column'
+            gridRowGap={4}>
+            <FullscreenButton
+              toggleFullscreen={toggleFullscreen}
+              isFullscreen={isFullscreen}
+            />
+            <QualityMenu
+              quality={quality}
+              setQuality={setQuality}
+            />
+          </Center>
+        </Center>
         <Box
           bg='primary'
           opacity='0.7'
@@ -166,9 +177,7 @@ export function VideoPlayer({
           textAlign='center'
           fontWeight='bold'
           color='complementary'
-          visibility={
-            showChoices ? 'visible' : 'hidden'
-          }>
+          display={showChoices ? '' : 'none'}>
           <QuestionTimer
             timerActive={showChoices}
             isPlaying={isPlaying}
