@@ -14,7 +14,7 @@ import { usePlayerReducer } from './handlers/usePlayerReducer';
 import { useResetSelected } from './handlers/useResetSelected';
 import { useTimeUpdateTriggerNext } from './handlers/useTimeUpdateTriggerNext';
 import { offsetIndex } from './helpers/offsetIndex';
-import { QualityMenu } from './QualityMenu';
+import { QualityMenu } from './components/QualityMenu';
 import { Video } from './types/Video';
 
 export function VideoPlayer({
