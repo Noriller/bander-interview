@@ -33,6 +33,7 @@ export function VideoPlayer({
     useState(false);
   const [quality, setQuality] = useState(1080);
   const [selected, setSelected] = useState(0);
+  const [started, setStarted] = useState(false);
 
   const refs = useMemo(
     () => [ref0, ref1, ref2, ref3],
@@ -84,6 +85,8 @@ export function VideoPlayer({
     handleOnVideoClick,
   } = makeHandlers(
     playerDispatch,
+    setStarted,
+    started,
     isPlaying,
     isFullscreen,
     container,
@@ -113,6 +116,9 @@ export function VideoPlayer({
         h='100%'
         position='absolute'
         pointerEvents='none'
+        bgImage={started ? '' : '/playGif.gif'}
+        bgRepeat='no-repeat'
+        bgSize='cover'
       />
       <Flex
         position='absolute'
@@ -141,7 +147,7 @@ export function VideoPlayer({
           pointerEvents='none'
           p='0.5em'
           transition='all 0.2s'
-          opacity='1'>
+          opacity={isPlaying ? 0 : 1}>
           <PlayButton
             togglePlay={togglePlay}
             isPlaying={isPlaying}

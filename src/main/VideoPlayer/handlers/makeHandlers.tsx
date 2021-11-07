@@ -1,13 +1,20 @@
-import React from 'react';
+import React, {
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import { Actions } from '../types/Actions';
 
 export function makeHandlers(
-  playerDispatch: React.Dispatch<Actions>,
+  playerDispatch: Dispatch<Actions>,
+  setStarted: Dispatch<SetStateAction<boolean>>,
+  started: boolean,
   isPlaying: boolean,
   isFullscreen: boolean,
   container: React.RefObject<HTMLDivElement>,
 ) {
   const togglePlay = () => {
+    if (!started) setStarted(true);
+
     playerDispatch({
       type: 'playToggle',
       payload: !isPlaying,
