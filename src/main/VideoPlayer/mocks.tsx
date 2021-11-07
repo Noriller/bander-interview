@@ -204,6 +204,33 @@ export const mockShenanigans: VideoData = {
       wasSeen: false,
     },
   ],
+  bloopersVideos: [
+    {
+      videoSrc: '',
+      videoTitle: 'bloopersVideos 1',
+      wasSeen: false,
+    },
+    {
+      videoSrc: '',
+      videoTitle: 'bloopersVideos 2',
+      wasSeen: false,
+    },
+    {
+      videoSrc: '',
+      videoTitle: 'bloopersVideos 3',
+      wasSeen: false,
+    },
+    {
+      videoSrc: '',
+      videoTitle: 'bloopersVideos 4',
+      wasSeen: false,
+    },
+    {
+      videoSrc: '',
+      videoTitle: 'bloopersVideos 5',
+      wasSeen: false,
+    },
+  ],
   finalVideo: {
     videoSrc: '',
     videoTitle: 'Interview Conclusion',

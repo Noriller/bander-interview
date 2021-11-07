@@ -1,11 +1,9 @@
 import { Center } from '@chakra-ui/layout';
 import { Skeleton } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { makeVideoTree } from './VideoPlayer/helpers/makeVideoTree';
 import { mockShenanigans } from './VideoPlayer/mocks';
-import {
-  Video,
-  VideoData,
-} from './VideoPlayer/types/Video';
+import { Video } from './VideoPlayer/types/Video';
 import { VideoPlayer } from './VideoPlayer/VideoPlayer';
 
 export function VideoContainer() {
@@ -17,7 +15,9 @@ export function VideoContainer() {
       () =>
         // make tree from VideoData
         // change the wasSeen accordingly
-        setVideosData(mockShenanigans.entryVideo),
+        setVideosData(
+          makeVideoTree(mockShenanigans),
+        ),
       200,
     );
     return () => clearTimeout(timeouts);
