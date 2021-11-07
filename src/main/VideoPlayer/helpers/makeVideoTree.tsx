@@ -40,13 +40,13 @@ function makeVideoPart(
 ) {
   const [v1, v2, v3, v4] = videoPart;
 
-  appendChildren(v3, appendToLeafs);
-  appendChildren(v4, appendToLeafs);
+  appendChildren(v3, appendToLeafs, true);
+  appendChildren(v4, appendToLeafs, true);
   appendChildren(blooper, [v3, v4]);
 
   const children = [v3, v4, blooper];
-  appendChildren(v1, children);
-  appendChildren(v2, children);
+  appendChildren(v1, children, true);
+  appendChildren(v2, children, true);
 
   return [v1, v2];
 }
@@ -54,8 +54,11 @@ function makeVideoPart(
 function appendChildren(
   video: Video,
   children: Video[],
+  asNewSibling = false,
 ) {
-  if (
+  if (asNewSibling && video.children) {
+    video.children.push(...children);
+  } else if (
     !video.children ||
     video.children.length === 0
   ) {
