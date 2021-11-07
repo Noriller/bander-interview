@@ -1,6 +1,7 @@
 import { Center } from '@chakra-ui/layout';
 import { Skeleton } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { setSeen } from './setSeen';
 import { getFinishedFromStorage } from './VideoPlayer/helpers/getFinishedFromStorage';
 import { getSeenVideosFromStorage } from './VideoPlayer/helpers/getSeenVideosFromStorage';
 import { makeVideoTree } from './VideoPlayer/helpers/makeVideoTree';
@@ -28,8 +29,7 @@ export function VideoContainer() {
     setLocalSeenVideos(seenVideosFromStorage);
     setFinished(finishedFromStorage);
 
-    // set seen for the seen videos
-    const videos = mockShenanigans;
+    const videos = setSeen(seenVideosFromStorage);
 
     // development only to avoid reload issues
     Object.keys(videoTree).length === 0 &&
@@ -44,12 +44,6 @@ export function VideoContainer() {
 
   // check storage if finished once
   // if finished, show drawer menu
-
-  // maybe wrap storage in a hook, one for finished one for seen videos
-  // pass those to VideoPlayer
-  // if there's no video children, finish
-  // each new video -> mark as seen
-  // probably should pass: seen videos, setSeen and setFinished
 
   return (
     <Center

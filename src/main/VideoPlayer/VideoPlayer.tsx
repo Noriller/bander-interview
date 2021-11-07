@@ -54,242 +54,237 @@ export function VideoPlayer({
     [],
   );
 
-  const {
-    isPlaying,
-    showChoices,
-    currentVideoPlayer,
-    currentVideo,
-    isFinished,
-    playerDispatch,
-  } = usePlayerReducer(refs, videoTree, finished);
+const {
+  isPlaying,
+  showChoices,
+  currentVideoPlayer,
+  currentVideo,
+  isFinished,
+  playerDispatch,
+} = usePlayerReducer(refs, videoTree, finished);
 
-  const dispatchNextQuestion = () => {
-    const nextIndex = offsetIndex(
-      refs.length,
-      currentVideoPlayer,
-      selected + 1,
+const dispatchNextQuestion = () => {
+  const nextIndex = offsetIndex(
+    refs.length,
+    currentVideoPlayer,
+    selected + 1,
+  );
+  if (showChoices) {
+    const nextVideo =
+      currentVideo.children?.[selected] ??
+      currentVideo;
+    playerDispatch({
+      type: 'changeCurrent',
+      payload: {
+        nextIndex,
+        nextCurrentVideo: nextVideo,
+      },
+    });
+    setSeenVideos(cur => {
+      if (cur.includes(currentVideo.videoTitle)) {
+        return cur;
+      } else {
+        return [...cur, currentVideo.videoTitle];
+      }
+    });
+  }
+};
+
+useEffect(() => {
+  if (seenVideos?.length > 0) {
+    window.localStorage.setItem(
+      '@banderInterview-seenVideos',
+      JSON.stringify(seenVideos),
     );
-    if (showChoices) {
-      const nextVideo =
-        currentVideo.children?.[selected] ??
-        currentVideo;
-      playerDispatch({
-        type: 'changeCurrent',
-        payload: {
-          nextIndex,
-          nextCurrentVideo: nextVideo,
-        },
-      });
-      setSeenVideos(cur => {
-        if (
-          cur.includes(currentVideo.videoTitle)
-        ) {
-          return cur;
-        } else {
-          return [
-            ...cur,
-            currentVideo.videoTitle,
-          ];
-        }
-      });
-    }
-  };
+  }
+}, [seenVideos]);
 
-  useEffect(() => {
-    if (seenVideos?.length > 0) {
-      window.localStorage.setItem(
-        '@banderInterview-seenVideos',
-        JSON.stringify(seenVideos),
-      );
-    }
-  }, [seenVideos]);
+useResetSelected(showChoices, setSelected);
 
-  useResetSelected(showChoices, setSelected);
+useTimeUpdateTriggerNext(
+  refs,
+  currentVideoPlayer,
+  playerDispatch,
+  showChoices,
+);
 
-  useTimeUpdateTriggerNext(
-    refs,
-    currentVideoPlayer,
-    playerDispatch,
-    showChoices,
-  );
+usePageListeners(setFullscreen, container);
 
-  usePageListeners(setFullscreen, container);
+const {
+  toggleFullscreen,
+  togglePlay,
+  handleRightClick,
+  handleOnVideoClick,
+} = makeHandlers(
+  playerDispatch,
+  setStarted,
+  started,
+  isPlaying,
+  isFullscreen,
+  container,
+);
 
-  const {
-    toggleFullscreen,
-    togglePlay,
-    handleRightClick,
-    handleOnVideoClick,
-  } = makeHandlers(
-    playerDispatch,
-    setStarted,
-    started,
-    isPlaying,
-    isFullscreen,
-    container,
-  );
+const keydownEvents = makeKeydownEvents(
+  toggleFullscreen,
+  togglePlay,
+  setSelected,
+  offsetIndex,
+  currentVideo.children?.length || 0,
+);
 
-  const keydownEvents = makeKeydownEvents(
-    toggleFullscreen,
-    togglePlay,
-    setSelected,
-    offsetIndex,
-    currentVideo.children?.length || 0,
-  );
-
-  return (
+return (
+  <Flex
+    ref={container}
+    flexDirection='column'
+    position='relative'
+    justifyContent='center'
+    tabIndex={0}
+    onKeyDown={keydownEvents}
+    onDoubleClick={toggleFullscreen}
+    onContextMenu={handleRightClick}
+    onClick={handleOnVideoClick}>
+    <Box
+      w='100%'
+      h='100%'
+      position='absolute'
+      pointerEvents='none'
+      bgImage={started ? '' : '/playGif.gif'}
+      bgRepeat='no-repeat'
+      bgSize='cover'
+    />
     <Flex
-      ref={container}
+      position='absolute'
+      top='0'
+      left='0'
+      w='100%'
+      h='100%'
       flexDirection='column'
-      position='relative'
-      justifyContent='center'
-      tabIndex={0}
-      onKeyDown={keydownEvents}
-      onDoubleClick={toggleFullscreen}
-      onContextMenu={handleRightClick}
-      onClick={handleOnVideoClick}>
-      <Box
-        w='100%'
-        h='100%'
-        position='absolute'
-        pointerEvents='none'
-        bgImage={started ? '' : '/playGif.gif'}
-        bgRepeat='no-repeat'
-        bgSize='cover'
-      />
-      <Flex
-        position='absolute'
-        top='0'
-        left='0'
-        w='100%'
-        h='100%'
-        flexDirection='column'
+      justifyContent='space-between'
+      zIndex='10'
+      fontSize={[
+        '1.2em',
+        '1.2em',
+        '1.3em',
+        '1.5em',
+        '2rem',
+      ]}
+      sx={{
+        '&:hover .controls': {
+          opacity: 1,
+        },
+      }}>
+      <Center
         justifyContent='space-between'
-        zIndex='10'
-        fontSize={[
-          '1.2em',
-          '1.2em',
-          '1.3em',
-          '1.5em',
-          '2rem',
-        ]}
-        sx={{
-          '&:hover .controls': {
-            opacity: 1,
-          },
-        }}>
+        className='controls'
+        pointerEvents='none'
+        p='0.5em'
+        transition='all 0.2s'
+        opacity={isPlaying ? 0 : 1}>
+        <PlayButton
+          togglePlay={togglePlay}
+          isPlaying={isPlaying}
+        />
         <Center
-          justifyContent='space-between'
-          className='controls'
-          pointerEvents='none'
-          p='0.5em'
-          transition='all 0.2s'
-          opacity={isPlaying ? 0 : 1}>
-          <PlayButton
-            togglePlay={togglePlay}
-            isPlaying={isPlaying}
-          />
-          <Center
-            bg='secondary'
-            w='50%'
-            opacity='0.7'
-            borderRadius='2xl'
-            p='0.5em'
-            marginBottom='auto'
-            textAlign='center'
-            fontWeight='bold'>
-            {currentVideo.videoTitle}
-          </Center>
-          <Center
-            flexDirection='column'
-            gridRowGap={4}>
-            <FullscreenButton
-              toggleFullscreen={toggleFullscreen}
-              isFullscreen={isFullscreen}
-            />
-            <QualityMenu
-              quality={quality}
-              setQuality={setQuality}
-            />
-          </Center>
-        </Center>
-        <Box
-          bg='primary'
+          bg='secondary'
+          w='50%'
           opacity='0.7'
-          zIndex='20'
+          borderRadius='2xl'
+          p='0.5em'
+          marginBottom='auto'
           textAlign='center'
-          fontWeight='bold'
-          color='complementary'
-          display={showChoices ? '' : 'none'}>
-          <QuestionTimer
-            timerActive={showChoices}
-            isPlaying={isPlaying}
-            dispatchNextQuestion={
-              dispatchNextQuestion
-            }
+          fontWeight='bold'>
+          {currentVideo.videoTitle}
+        </Center>
+        <Center
+          flexDirection='column'
+          gridRowGap={4}>
+          <FullscreenButton
+            toggleFullscreen={toggleFullscreen}
+            isFullscreen={isFullscreen}
           />
-          {currentVideo.children?.map(
-            (op: Video, index: number) => (
-              <Box
-                key={op.videoTitle}
-                onClick={() => setSelected(index)}
-                filter={
-                  index == selected
-                    ? 'drop-shadow(0 0 0.75rem var(--chakra-colors-contrast));'
-                    : ''
-                }>
-                {op.videoTitle}{' '}
-                {op.wasSeen ? '✅' : ''}
-              </Box>
-            ),
-          )}
-        </Box>
-      </Flex>
-      <Box zIndex='-1'>
-        <video
-          ref={ref0}
-          src={
-            videoTree.videoSrc ||
-            'http://127.0.0.1:8081/timeline/vid04.mp4'
+          <QualityMenu
+            quality={quality}
+            setQuality={setQuality}
+          />
+        </Center>
+      </Center>
+      <Box
+        bg='primary'
+        opacity='0.7'
+        zIndex='20'
+        textAlign='center'
+        fontWeight='bold'
+        color='complementary'
+        display={showChoices ? '' : 'none'}>
+        <QuestionTimer
+          timerActive={showChoices}
+          isPlaying={isPlaying}
+          dispatchNextQuestion={
+            dispatchNextQuestion
           }
-          preload='auto'
-          playsInline
-          style={{
-            display: 'block',
-            transition: 'all 0.3s ease-in-out 0s',
-          }}
         />
-        <video
-          ref={ref1}
-          src={''}
-          preload='metadata'
-          playsInline
-          style={{
-            display: 'none',
-            transition: 'all 0.3s ease-in-out 0s',
-          }}
-        />
-        <video
-          ref={ref2}
-          src={''}
-          preload='metadata'
-          playsInline
-          style={{
-            display: 'none',
-            transition: 'all 0.3s ease-in-out 0s',
-          }}
-        />
-        <video
-          ref={ref3}
-          src={''}
-          preload='metadata'
-          playsInline
-          style={{
-            display: 'none',
-            transition: 'all 0.3s ease-in-out 0s',
-          }}
-        />
+        {currentVideo.children?.map(
+          (op: Video, index: number) => (
+            <Box
+              key={op.videoTitle}
+              onClick={() => setSelected(index)}
+              filter={
+                index == selected
+                  ? 'drop-shadow(0 0 0.75rem var(--chakra-colors-contrast));'
+                  : ''
+              }>
+              {op.videoTitle}{' '}
+              {op.wasSeen ? '✔️' : ''}
+            </Box>
+          ),
+        )}
       </Box>
     </Flex>
-  );
+    <Box zIndex='-1'>
+      <video
+        ref={ref0}
+        src={
+          videoTree.videoSrc ||
+          'http://127.0.0.1:8081/timeline/vid04.mp4'
+        }
+        preload='auto'
+        playsInline
+        style={{
+          display: 'block',
+          transition: 'all 0.3s ease-in-out 0s',
+        }}
+      />
+      <video
+        ref={ref1}
+        src={''}
+        preload='metadata'
+        playsInline
+        style={{
+          display: 'none',
+          transition: 'all 0.3s ease-in-out 0s',
+        }}
+      />
+      <video
+        ref={ref2}
+        src={''}
+        preload='metadata'
+        playsInline
+        style={{
+          display: 'none',
+          transition: 'all 0.3s ease-in-out 0s',
+        }}
+      />
+      <video
+        ref={ref3}
+        src={''}
+        preload='metadata'
+        playsInline
+        style={{
+          display: 'none',
+          transition: 'all 0.3s ease-in-out 0s',
+        }}
+      />
+    </Box>
+  </Flex>
+);
 }
