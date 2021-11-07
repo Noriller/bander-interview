@@ -1,26 +1,45 @@
 import { Center } from '@chakra-ui/layout';
 import { Skeleton } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { getFinishedFromStorage } from './VideoPlayer/helpers/getFinishedFromStorage';
+import { getSeenVideosFromStorage } from './VideoPlayer/helpers/getSeenVideosFromStorage';
 import { makeVideoTree } from './VideoPlayer/helpers/makeVideoTree';
 import { mockShenanigans } from './VideoPlayer/mocks';
 import { Video } from './VideoPlayer/types/Video';
 import { VideoPlayer } from './VideoPlayer/VideoPlayer';
 
 export function VideoContainer() {
-  const [videoTree, setVideosData] =
+  const [videoTree, setVideosTree] =
     useState<Video>({} as Video);
+  const [allVideos, setAllVideos] = useState<
+    Video[]
+  >([]);
+  const [localSeenVideos, setLocalSeenVideos] =
+    useState<string[] | null>(null);
+  const [finished, setFinished] =
+    useState<boolean>(false);
 
   useEffect(() => {
-    const timeouts = setTimeout(
-      () =>
-        // make tree from VideoData
-        // change the wasSeen accordingly
-        setVideosData(
-          makeVideoTree(mockShenanigans),
-        ),
-      200,
-    );
-    return () => clearTimeout(timeouts);
+    const seenVideosFromStorage =
+      getSeenVideosFromStorage();
+    const finishedFromStorage =
+      getFinishedFromStorage();
+
+    setLocalSeenVideos(seenVideosFromStorage);
+    setFinished(finishedFromStorage);
+
+    // set seen for the seen videos
+    const videos = mockShenanigans;
+
+    // development only to avoid reload issues
+    Object.keys(videoTree).length === 0 &&
+      setVideosTree(makeVideoTree(videos));
+
+    setAllVideos([
+      ...mockShenanigans.firstPartVideos,
+      ...mockShenanigans.secondPartVideos,
+      ...mockShenanigans.extraVideos,
+    ]);
   }, []);
 
   // check storage if finished once
@@ -48,10 +67,16 @@ export function VideoContainer() {
         <Skeleton
           startColor='secondary'
           endColor='contrast'
-          isLoaded={Boolean(
-            videoTree.videoTitle,
-          )}>
-          <VideoPlayer videoTree={videoTree} />
+          isLoaded={
+            Object.keys(videoTree).length !== 0 &&
+            localSeenVideos !== null
+          }>
+          <VideoPlayer
+            videoTree={videoTree}
+            allVideos={allVideos}
+            localSeenVideos={localSeenVideos!}
+            finished={finished}
+          />
         </Skeleton>
       </Center>
     </Center>

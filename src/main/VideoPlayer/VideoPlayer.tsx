@@ -3,7 +3,12 @@ import {
   Center,
   Flex,
 } from '@chakra-ui/layout';
-import { useMemo, useRef, useState } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { FullscreenButton } from './components/FullscreenButton';
 import { PlayButton } from './components/PlayButton';
 import { QuestionTimer } from './components/QuestionTimer';
@@ -19,8 +24,14 @@ import { Video } from './types/Video';
 
 export function VideoPlayer({
   videoTree,
+  allVideos,
+  localSeenVideos,
+  finished,
 }: {
   videoTree: Video;
+  allVideos: Video[];
+  localSeenVideos: string[];
+  finished: boolean;
 }) {
   const ref0 = useRef<HTMLVideoElement>(null);
   const ref1 = useRef<HTMLVideoElement>(null);
@@ -34,6 +45,9 @@ export function VideoPlayer({
   const [quality, setQuality] = useState(1080);
   const [selected, setSelected] = useState(0);
   const [started, setStarted] = useState(false);
+  const [seenVideos, setSeenVideos] = useState(
+    localSeenVideos,
+  );
 
   const refs = useMemo(
     () => [ref0, ref1, ref2, ref3],
@@ -45,8 +59,9 @@ export function VideoPlayer({
     showChoices,
     currentVideoPlayer,
     currentVideo,
+    isFinished,
     playerDispatch,
-  } = usePlayerReducer(refs, videoTree);
+  } = usePlayerReducer(refs, videoTree, finished);
 
   const dispatchNextQuestion = () => {
     const nextIndex = offsetIndex(
@@ -55,17 +70,39 @@ export function VideoPlayer({
       selected + 1,
     );
     if (showChoices) {
+      const nextVideo =
+        currentVideo.children?.[selected] ??
+        currentVideo;
       playerDispatch({
         type: 'changeCurrent',
         payload: {
           nextIndex,
-          nextCurrentVideo:
-            currentVideo.children?.[selected] ??
-            currentVideo,
+          nextCurrentVideo: nextVideo,
         },
+      });
+      setSeenVideos(cur => {
+        if (
+          cur.includes(currentVideo.videoTitle)
+        ) {
+          return cur;
+        } else {
+          return [
+            ...cur,
+            currentVideo.videoTitle,
+          ];
+        }
       });
     }
   };
+
+  useEffect(() => {
+    if (seenVideos?.length > 0) {
+      window.localStorage.setItem(
+        '@banderInterview-seenVideos',
+        JSON.stringify(seenVideos),
+      );
+    }
+  }, [seenVideos]);
 
   useResetSelected(showChoices, setSelected);
 
