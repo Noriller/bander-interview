@@ -6,6 +6,7 @@ import { Video } from '../types/Video';
 export function usePlayerReducer(
   refs: RefObject<HTMLVideoElement>[],
   video: Video,
+  finished: boolean,
 ) {
   const reducer = makeReducer(refs);
   const [
@@ -14,11 +15,13 @@ export function usePlayerReducer(
       showChoices,
       currentVideoPlayer,
       currentVideo,
+      isFinished,
     },
     playerDispatch,
   ] = useReducer(reducer, {
     ...initialReducerState,
     currentVideo: video,
+    isFinished: finished,
   });
 
   return {
@@ -26,6 +29,7 @@ export function usePlayerReducer(
     showChoices,
     currentVideoPlayer,
     currentVideo,
+    isFinished,
     playerDispatch,
   };
 }

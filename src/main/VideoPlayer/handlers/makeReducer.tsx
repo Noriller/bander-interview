@@ -28,6 +28,7 @@ export function makeReducer(
         if (!children) {
           return {
             ...state,
+            finished: true,
           };
         }
 

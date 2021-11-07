@@ -5,4 +5,5 @@ export interface State {
   showChoices: boolean;
   currentVideoPlayer: number;
   currentVideo: Video;
+  isFinished: boolean;
 }
