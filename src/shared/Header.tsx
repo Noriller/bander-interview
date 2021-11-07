@@ -44,7 +44,7 @@ export function Header() {
             label='Github'
           />
           <CustomLink
-            href='https://www.linkedin.com/in/noriller/'
+            href='https://dev.to/noriller'
             label='Dev.to'
           />
         </HStack>
