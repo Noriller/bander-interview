@@ -14,4 +14,10 @@ export type Actions =
         nextIndex: number;
         nextCurrentVideo: Video;
       };
+    }
+  | {
+      type: 'changeToVideo';
+      payload: {
+        video: Video;
+      };
     };

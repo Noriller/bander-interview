@@ -75,6 +75,31 @@ export function makeReducer(
             action.payload.nextCurrentVideo,
           showChoices: false,
         };
+      case 'changeToVideo':
+        refs.forEach((ref, index) => {
+          if (index === 0) {
+            ref.current!.src =
+              action.payload.video.videoSrc ||
+              'http://127.0.0.1:8081/timeline/vid04.mp4';
+            ref.current!.preload = 'auto';
+            ref.current!.currentTime = 0.1;
+            ref.current!.style.display = 'block';
+          } else {
+            ref.current!.pause();
+            ref.current!.style.display = 'none';
+            ref.current!.preload = 'metadata';
+            ref.current!.ontimeupdate = null;
+            ref.current!.src = '';
+          }
+        });
+
+        return {
+          ...state,
+          currentVideoPlayer: 0,
+          currentVideo: action.payload.video,
+          isPlaying: false,
+          showChoices: false,
+        };
       default:
         throw new Error();
     }
