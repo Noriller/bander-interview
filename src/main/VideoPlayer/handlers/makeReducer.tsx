@@ -23,16 +23,18 @@ export function makeReducer(
           isPlaying: action.payload,
         };
       case 'prepareNext':
-        const children =
-          state.currentVideo.children;
-        if (!children) {
+        if (!state.currentVideo.children) {
           return {
             ...state,
             finished: true,
           };
         }
 
-        children.forEach(
+        while (state.currentVideo.children?.length > 3) {
+          state.currentVideo.children?.pop();
+        }
+
+        state.currentVideo.children.forEach(
           (child: Video, index: number) => {
             const newIndex = offsetIndex(
               refs.length,
@@ -84,7 +86,6 @@ export function makeReducer(
             ref.current!.preload = 'auto';
             ref.current!.currentTime = 0;
             ref.current!.style.display = 'block';
-            ref.current!.play();
           } else {
             ref.current!.pause();
             ref.current!.style.display = 'none';
@@ -98,7 +99,7 @@ export function makeReducer(
           ...state,
           currentVideoPlayer: 0,
           currentVideo: action.payload.video,
-          isPlaying: true,
+          isPlaying: false,
           showChoices: false,
         };
       default:
