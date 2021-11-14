@@ -1,8 +1,5 @@
-import { mockShenanigans } from './VideoPlayer/mocks';
-import {
-  Video,
-  VideoData,
-} from './VideoPlayer/types/Video';
+import { mockShenanigans } from '../mocks';
+import { Video, VideoData } from '../types/Video';
 
 export function setSeen(
   seenVideosFromStorage: string[],

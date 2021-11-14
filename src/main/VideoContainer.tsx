@@ -1,7 +1,7 @@
 import { Center } from '@chakra-ui/layout';
 import { Skeleton } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { setSeen } from './setSeen';
+import { setSeen } from './VideoPlayer/helpers/setSeen';
 import { getFinishedFromStorage } from './VideoPlayer/helpers/getFinishedFromStorage';
 import { getSeenVideosFromStorage } from './VideoPlayer/helpers/getSeenVideosFromStorage';
 import { makeVideoTree } from './VideoPlayer/helpers/makeVideoTree';
