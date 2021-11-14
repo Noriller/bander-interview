@@ -5,7 +5,6 @@ import { setSeen } from './setSeen';
 import { getFinishedFromStorage } from './VideoPlayer/helpers/getFinishedFromStorage';
 import { getSeenVideosFromStorage } from './VideoPlayer/helpers/getSeenVideosFromStorage';
 import { makeVideoTree } from './VideoPlayer/helpers/makeVideoTree';
-import { mockShenanigans } from './VideoPlayer/mocks';
 import { Video } from './VideoPlayer/types/Video';
 import { VideoPlayer } from './VideoPlayer/VideoPlayer';
 
@@ -36,9 +35,9 @@ export function VideoContainer() {
       setVideosTree(makeVideoTree(videos));
 
     setAllVideos([
-      ...mockShenanigans.firstPartVideos,
-      ...mockShenanigans.secondPartVideos,
-      ...mockShenanigans.extraVideos,
+      ...videos.firstPartVideos,
+      ...videos.secondPartVideos,
+      ...videos.extraVideos,
     ]);
   }, []);
 
