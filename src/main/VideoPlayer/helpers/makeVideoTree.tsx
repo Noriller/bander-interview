@@ -57,6 +57,9 @@ function appendChildren(
   asNewSibling = false,
 ) {
   if (asNewSibling && video.children) {
+    video.children.forEach(child =>
+      appendChildren(child, children),
+    );
     video.children.push(...children);
   } else if (
     !video.children ||
