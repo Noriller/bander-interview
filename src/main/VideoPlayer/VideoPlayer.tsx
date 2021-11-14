@@ -127,12 +127,14 @@ export function VideoPlayer({
     currentVideo.children?.length || 0,
   );
 
-  function saveSeenVideo() {
+  function saveSeenVideo(
+    title = currentVideo.videoTitle,
+  ) {
     setSeenVideos(cur => {
-      if (cur.includes(currentVideo.videoTitle)) {
+      if (cur.includes(title)) {
         return cur;
       } else {
-        return [...cur, currentVideo.videoTitle];
+        return [...cur, title];
       }
     });
   }
@@ -144,7 +146,8 @@ export function VideoPlayer({
         video,
       },
     });
-    saveSeenVideo();
+    video.wasSeen = true;
+    saveSeenVideo(video.videoTitle);
   };
 
   return (

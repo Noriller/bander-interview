@@ -39,10 +39,7 @@ export function VideoContainer() {
       ...videos.secondPartVideos,
       ...videos.extraVideos,
     ]);
-  }, []);
-
-  // check storage if finished once
-  // if finished, show drawer menu
+  }, [videoTree]);
 
   return (
     <Center
