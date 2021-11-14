@@ -82,8 +82,9 @@ export function makeReducer(
               action.payload.video.videoSrc ||
               'http://127.0.0.1:8081/timeline/vid04.mp4';
             ref.current!.preload = 'auto';
-            ref.current!.currentTime = 0.1;
+            ref.current!.currentTime = 0;
             ref.current!.style.display = 'block';
+            ref.current!.play();
           } else {
             ref.current!.pause();
             ref.current!.style.display = 'none';
@@ -97,7 +98,7 @@ export function makeReducer(
           ...state,
           currentVideoPlayer: 0,
           currentVideo: action.payload.video,
-          isPlaying: false,
+          isPlaying: true,
           showChoices: false,
         };
       default:
