@@ -21,7 +21,7 @@ import { useTimeUpdateTriggerNext } from './handlers/useTimeUpdateTriggerNext';
 import { offsetIndex } from './helpers/offsetIndex';
 import { QualityMenu } from './components/QualityMenu';
 import { Video } from './types/Video';
-import { VideoSelect } from './VideoSelect';
+import { VideoSelect } from './components/VideoSelect';
 
 export function VideoPlayer({
   videoTree,

@@ -8,7 +8,7 @@ import {
   Portal,
 } from '@chakra-ui/react';
 import { useRef } from 'react';
-import { Video } from './types/Video';
+import { Video } from '../types/Video';
 
 export const VideoSelect = ({
   allVideos,
