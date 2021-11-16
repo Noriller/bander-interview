@@ -203,7 +203,7 @@ export function VideoPlayer({
         justifyContent='space-between'
         zIndex='10'
         fontSize={[
-          '1.2em',
+          '1em',
           '1.2em',
           '1.3em',
           '1.5em',
@@ -239,7 +239,7 @@ export function VideoPlayer({
               bg='secondary'
               opacity='0.7'
               borderRadius='2xl'
-              p='0.5em'
+              p={['0.25em', '0.5em']}
               marginBottom={
                 isFinished ? '0.5em' : 'auto'
               }

@@ -27,7 +27,9 @@ export function Footer() {
       w='full'
       minH='10vh'
       alignItems='center'
-      py={['2', 'unset']}
+      bottom={['0', 'unset']}
+      position={['fixed', 'unset']}
+      py={'2'}
       flexDirection={['column-reverse', 'unset']}
       justifyContent={['unset', 'space-evenly']}>
       <Box fontSize='smaller'>

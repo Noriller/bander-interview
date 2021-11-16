@@ -45,6 +45,7 @@ export function VideoContainer() {
     <Center
       as='main'
       flex='1 0 auto'
+      margin={['30% 0', 'unset']}
       alignContent='center'>
       <Center
         maxW={[

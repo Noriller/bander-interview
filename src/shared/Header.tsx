@@ -11,9 +11,9 @@ export function Header() {
     <Center
       as='header'
       w='full'
-      h={['auto', '9vh']}
+      minH={['auto', '9vh']}
       bg='secondary'
-      paddingY={['4', 'unset']}
+      paddingY={'4'}
       flexDirection={['column', 'unset']}
       justifyContent={['unset', 'space-around']}>
       <Heading

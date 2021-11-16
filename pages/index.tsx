@@ -9,8 +9,7 @@ import { MetaHead } from '../src/shared/MetaHead';
 const Home: NextPage = () => (
   <Flex
     flexDirection='column'
-    minH='100%'
-    position='fixed'>
+    minH={['100%', '100vh']}>
     <MetaHead title='Bruno Noriller - Bandersnatch Interview' />
 
     <Header />
