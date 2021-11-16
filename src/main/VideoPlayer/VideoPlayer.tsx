@@ -42,6 +42,8 @@ export function VideoPlayer({
 
   const container = useRef<HTMLDivElement>(null);
 
+  const [isTouchDevice, setIsTouchDevice] =
+    useState(false);
   const [isFullscreen, setFullscreen] =
     useState(false);
   const [selected, setSelected] = useState(0);
@@ -128,6 +130,15 @@ export function VideoPlayer({
     currentVideo.children?.length || 0,
   );
 
+  useEffect(() => {
+    setIsTouchDevice(
+      'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        // @ts-ignore
+        navigator.msMaxTouchPoints > 0,
+    );
+  }, []);
+
   function saveSeenVideo(
     title = currentVideo.videoTitle,
   ) {
@@ -198,11 +209,15 @@ export function VideoPlayer({
           '1.5em',
           '2rem',
         ]}
-        sx={{
-          '&:hover .controls': {
-            opacity: 1,
-          },
-        }}>
+        sx={
+          !isTouchDevice
+            ? {
+                '&:hover .controls': {
+                  opacity: 1,
+                },
+              }
+            : {}
+        }>
         <Center
           justifyContent='space-between'
           className='controls'
