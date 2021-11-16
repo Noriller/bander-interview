@@ -5,12 +5,12 @@ export function getFinishedFromStorage() {
     '@banderInterview-finished',
   );
   if (fromStorage !== null) {
-    return JSON.parse(fromStorage);
+    return fromStorage == 'true';
   } else {
     window.localStorage.setItem(
       '@banderInterview-finished',
       JSON.stringify(false),
     );
-    return [];
+    return false;
   }
 }
