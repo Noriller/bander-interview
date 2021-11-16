@@ -1,7 +1,5 @@
 import {
-  Box,
   Center,
-  Flex,
   Heading,
   HStack,
   StackDivider,
@@ -13,7 +11,7 @@ export function Header() {
     <Center
       as='header'
       w='full'
-      h={['auto', '10vh']}
+      h={['auto', '9vh']}
       bg='secondary'
       paddingY={['4', 'unset']}
       flexDirection={['column', 'unset']}
