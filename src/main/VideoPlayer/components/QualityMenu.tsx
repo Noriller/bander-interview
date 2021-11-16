@@ -5,14 +5,14 @@ import {
   MenuItem,
   Button,
 } from '@chakra-ui/react';
-import { Dispatch, SetStateAction } from 'react';
+import { VideoQuality } from '../types/State';
 
 export function QualityMenu({
   quality,
   setQuality,
 }: {
   quality: number;
-  setQuality: Dispatch<SetStateAction<number>>;
+  setQuality: (quality: VideoQuality) => void;
 }) {
   return (
     <Menu
@@ -35,8 +35,13 @@ export function QualityMenu({
         minW='unset'
         bg='primary'
         fontSize='0.8em'
+        zIndex={100}
         color='complementary'>
-        {[1080, 720, 480, 360].map(q => (
+        {(
+          [
+            1080, 720, 480, 360, 144,
+          ] as VideoQuality[]
+        ).map(q => (
           <MenuItem
             key={`menuItem__${q}`}
             placeContent='center'

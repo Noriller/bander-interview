@@ -26,11 +26,13 @@ export function makeReducer(
         if (!state.currentVideo.children) {
           return {
             ...state,
-            finished: true,
+            isFinished: true,
           };
         }
 
-        while (state.currentVideo.children?.length > 3) {
+        while (
+          state.currentVideo.children?.length > 3
+        ) {
           state.currentVideo.children?.pop();
         }
 
@@ -42,8 +44,7 @@ export function makeReducer(
               index + 1,
             );
             refs[newIndex].current!.src =
-              child.videoSrc ||
-              'http://127.0.0.1:8081/timeline/vid04.mp4';
+              child.videoSrc || `/mockVideos/${state.quality}/mock.mp4`;
           },
         );
 
@@ -82,7 +83,7 @@ export function makeReducer(
           if (index === 0) {
             ref.current!.src =
               action.payload.video.videoSrc ||
-              'http://127.0.0.1:8081/timeline/vid04.mp4';
+              `/mockVideos/${state.quality}/mock.mp4`;
             ref.current!.preload = 'auto';
             ref.current!.currentTime = 0;
             ref.current!.style.display = 'block';
@@ -101,6 +102,23 @@ export function makeReducer(
           currentVideo: action.payload.video,
           isPlaying: false,
           showChoices: false,
+        };
+      case 'changeQuality':
+        refs.forEach(ref => {
+          if (ref.current!.src == '') return;
+          ref.current!.pause();
+
+          ref.current!.src =
+            ref.current!.src.replace(
+              state.quality.toString(),
+              action.payload.quality.toString(),
+            );
+        });
+
+        return {
+          ...state,
+          isPlaying: false,
+          quality: action.payload.quality,
         };
       default:
         throw new Error();

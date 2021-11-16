@@ -3,7 +3,6 @@ import {
   RefObject,
   useEffect,
 } from 'react';
-import { mockVideos } from '../mocks';
 import { Actions } from '../types/Actions';
 
 export function useTimeUpdateTriggerNext(

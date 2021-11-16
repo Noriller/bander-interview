@@ -22,6 +22,7 @@ import { offsetIndex } from './helpers/offsetIndex';
 import { QualityMenu } from './components/QualityMenu';
 import { Video } from './types/Video';
 import { VideoSelect } from './components/VideoSelect';
+import { VideoQuality } from './types/State';
 
 export function VideoPlayer({
   videoTree,
@@ -43,7 +44,6 @@ export function VideoPlayer({
 
   const [isFullscreen, setFullscreen] =
     useState(false);
-  const [quality, setQuality] = useState(1080);
   const [selected, setSelected] = useState(0);
   const [started, setStarted] = useState(false);
   const [seenVideos, setSeenVideos] = useState(
@@ -60,6 +60,7 @@ export function VideoPlayer({
     showChoices,
     currentVideoPlayer,
     currentVideo,
+    quality,
     isFinished,
     playerDispatch,
   } = usePlayerReducer(refs, videoTree, finished);
@@ -150,6 +151,17 @@ export function VideoPlayer({
     saveSeenVideo(video.videoTitle);
   };
 
+  const handleQuality = (
+    newQuality: VideoQuality,
+  ) => {
+    playerDispatch({
+      type: 'changeQuality',
+      payload: {
+        quality: newQuality,
+      },
+    });
+  };
+
   return (
     <Flex
       ref={container}
@@ -238,7 +250,7 @@ export function VideoPlayer({
             />
             <QualityMenu
               quality={quality}
-              setQuality={setQuality}
+              setQuality={handleQuality}
             />
           </Center>
         </Center>
@@ -261,6 +273,7 @@ export function VideoPlayer({
             (op: Video, index: number) => (
               <Box
                 key={op.videoTitle}
+                cursor='pointer'
                 onClick={() => setSelected(index)}
                 filter={
                   index == selected
@@ -279,7 +292,7 @@ export function VideoPlayer({
           ref={ref0}
           src={
             videoTree.videoSrc ||
-            'http://127.0.0.1:8081/timeline/vid04.mp4'
+            '/mockVideos/1080/mock.mp4'
           }
           preload='auto'
           playsInline

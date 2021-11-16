@@ -1,3 +1,4 @@
+import { VideoQuality } from './State';
 import { Video } from './Video';
 
 export type Actions =
@@ -19,5 +20,11 @@ export type Actions =
       type: 'changeToVideo';
       payload: {
         video: Video;
+      };
+    }
+  | {
+      type: 'changeQuality';
+      payload: {
+        quality: VideoQuality;
       };
     };

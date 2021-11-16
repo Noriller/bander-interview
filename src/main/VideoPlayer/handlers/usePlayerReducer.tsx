@@ -15,6 +15,7 @@ export function usePlayerReducer(
       showChoices,
       currentVideoPlayer,
       currentVideo,
+      quality,
       isFinished,
     },
     playerDispatch,
@@ -29,6 +30,7 @@ export function usePlayerReducer(
     showChoices,
     currentVideoPlayer,
     currentVideo,
+    quality,
     isFinished,
     playerDispatch,
   };
