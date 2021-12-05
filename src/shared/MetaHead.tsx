@@ -11,7 +11,7 @@ export function MetaHead({
       <title>{title}</title>
       <meta
         name='description'
-        content='An itneractive interview with Bruno Noriller'
+        content='An interactive interview with Bruno Noriller'
       />
       <meta
         name='keywords'
