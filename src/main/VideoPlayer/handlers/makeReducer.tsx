@@ -4,6 +4,9 @@ import { Actions } from '../types/Actions';
 import { Video } from '../types/Video';
 import { offsetIndex } from '../helpers/offsetIndex';
 
+const API =
+  'https://d9qqq9nymqb2i.cloudfront.net/';
+
 export function makeReducer(
   refs: React.RefObject<HTMLVideoElement>[],
 ) {
@@ -43,8 +46,10 @@ export function makeReducer(
               state.currentVideoPlayer,
               index + 1,
             );
-            refs[newIndex].current!.src =
-              child.videoSrc || `/mockVideos/${state.quality}/mock.mp4`;
+            refs[
+              newIndex
+            ].current!.src = `${API}/${state.quality}/${child.videoSrc}`;
+            // child.videoSrc || `/mockVideos/${state.quality}/mock.mp4`;
           },
         );
 
@@ -81,9 +86,9 @@ export function makeReducer(
       case 'changeToVideo':
         refs.forEach((ref, index) => {
           if (index === 0) {
-            ref.current!.src =
-              action.payload.video.videoSrc ||
-              `/mockVideos/${state.quality}/mock.mp4`;
+            ref.current!.src = `${API}/${state.quality}/${action.payload.video.videoSrc}`;
+            // action.payload.video.videoSrc ||
+            // `/mockVideos/${state.quality}/mock.mp4`;
             ref.current!.preload = 'auto';
             ref.current!.currentTime = 0;
             ref.current!.style.display = 'block';
