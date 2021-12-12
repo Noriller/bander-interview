@@ -23,6 +23,7 @@ import { QualityMenu } from './components/QualityMenu';
 import { Video } from './types/Video';
 import { VideoSelect } from './components/VideoSelect';
 import { VideoQuality } from './types/State';
+import { API } from './handlers/makeReducer';
 
 export function VideoPlayer({
   videoTree,
@@ -305,10 +306,7 @@ export function VideoPlayer({
       <Box zIndex='-1'>
         <video
           ref={ref0}
-          src={
-            videoTree.videoSrc ||
-            '/mockVideos/1080/mock.mp4'
-          }
+          src={`${API}/720/${videoTree.videoSrc}`}
           preload='auto'
           playsInline
           style={{

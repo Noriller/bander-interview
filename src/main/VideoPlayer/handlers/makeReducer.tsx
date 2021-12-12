@@ -4,8 +4,8 @@ import { Actions } from '../types/Actions';
 import { Video } from '../types/Video';
 import { offsetIndex } from '../helpers/offsetIndex';
 
-const API =
-  'https://d9qqq9nymqb2i.cloudfront.net/';
+export const API =
+  'https://d9qqq9nymqb2i.cloudfront.net';
 
 export function makeReducer(
   refs: React.RefObject<HTMLVideoElement>[],
