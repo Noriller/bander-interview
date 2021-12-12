@@ -37,26 +37,24 @@ export function QualityMenu({
         fontSize='0.8em'
         zIndex={100}
         color='complementary'>
-        {(
-          [
-            1080, 720, 480, 360, 144,
-          ] as VideoQuality[]
-        ).map(q => (
-          <MenuItem
-            key={`menuItem__${q}`}
-            placeContent='center'
-            pointerEvents='all'
-            _hover={{
-              bg: 'secondary',
-              color: 'contrast',
-            }}
-            _focus={{
-              bg: 'secondary',
-            }}
-            onClick={() => setQuality(q)}>
-            {q}p
-          </MenuItem>
-        ))}
+        {([720, 360, 144] as VideoQuality[]).map(
+          q => (
+            <MenuItem
+              key={`menuItem__${q}`}
+              placeContent='center'
+              pointerEvents='all'
+              _hover={{
+                bg: 'secondary',
+                color: 'contrast',
+              }}
+              _focus={{
+                bg: 'secondary',
+              }}
+              onClick={() => setQuality(q)}>
+              {q}p
+            </MenuItem>
+          ),
+        )}
       </MenuList>
     </Menu>
   );
